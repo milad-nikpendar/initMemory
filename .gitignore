@@ -1,44 +1,56 @@
-# PlatformIO build files
+# ================================================
+# Git Ignore for initMemory & initTransport v3.0.0
+# ================================================
+
+# — PlatformIO build directories
 .pio/
 .pioenvs/
-.piolibdeps/
+piolibdeps/
 .pio/libdeps/
-.pio/build/
 
-# Arduino IDE / Arduino CLI build folders
+# — Arduino IDE / CLI build folders
 .build/
 lib/.cache/
 
-# VSCode settings
-.vscode/
-
-# JetBrains IDE settings
-.idea/
-
-# MacOS Finder
-.DS_Store
-
-# Windows thumbnail cache
-Thumbs.db
-
-# Linux temporary files
-*~
-
-# Compiled binaries & objects
+# — Compiled binaries & objects
 *.elf
 *.bin
 *.hex
 *.o
 *.a
 
-# Arduino-related temp files
-*.pyc
+# — VSCode settings
+.vscode/
+*.code-workspace
+
+# — JetBrains IDE (CLion, IntelliJ, etc.)
+.idea/
+
+# — macOS
+.DS_Store
+
+# — Windows
+Thumbs.db
+desktop.ini
+
+# — Linux / editor swap & temp files
+*~
 *.swp
+*.swo
 *.tmp
 *.bak
 
-# Logs
+# — Logs and coverage
 *.log
+coverage/
 
-# Library metadata
-library.json
+# — Documentation build
+/docs/_build/
+/build/
+
+# — Arduino-specific temp
+*.pyc
+
+# — Misc
+# Ignore user-specific environment files
+.env
