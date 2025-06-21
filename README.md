@@ -61,4 +61,3 @@ MIT License – see [LICENSE](LICENSE) for details.
 
 Created with ❤️ by **Milad Nikpendar**  
 GitHub: [milad-nikpendar/initMemory](https://github.com/milad-nikpendar/initMemory)  
-```
