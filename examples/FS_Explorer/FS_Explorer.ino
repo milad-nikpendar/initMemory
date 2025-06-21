@@ -9,7 +9,7 @@
 #include <Arduino.h>
 #include <LittleFS.h>
 #define Debug_Serial_Memory
-#include "initMemory.h"
+#include <initMemory.h>
 
 // bind LittleFS to our core FS helper
 memoryAccess_t Filemanager(&LittleFS);
@@ -38,9 +38,9 @@ void setup() {
   // 4) Write a demo file
   const char* demoFile = "/fs_explorer/info.txt";
   Filemanager.write(demoFile,
-           "FS Explorer v3 Demo (LittleFS)\n"
-           "Line 1: Hello\n"
-           "Line 2: World\n");
+           "FS Explorer v3 Demo (LittleFS)\r\n"
+           "Line 1: Hello\r\n"
+           "Line 2: World\r\n");
   Serial.printf("\nWrote file: %s\n", demoFile);
 
   // 5) Check existence & get size via class method
@@ -60,7 +60,8 @@ void setup() {
   // 7) Read first 2 lines only
   Serial.println("First two lines:");
   File fl = Filemanager.open(demoFile);
-  Serial.println(Filemanager.readLines(fl, 2, false));
+  bool end_file;
+  Serial.println(Filemanager.readLines(fl, 2, end_file));
   fl.close();
 
   // 8) Run I/O benchmark
@@ -72,4 +73,5 @@ void setup() {
 
 void loop() {
   // nothing here
+  delay(1000);
 }
