@@ -10,12 +10,19 @@
 #include <LittleFS.h>
 #include <SPI.h>
 #include <SD.h>
-#define Debug_Serial_Memory
-#include "initMemory.h"
-#include "initTransport.h"
 
-// SD card chip‐select pin
-static const int SD_CS = 5;
+// enable verbose serial debug
+#define Debug_Serial_Memory
+#include <initTransport.h>
+
+SPIClass *SD_SPI = NULL;
+
+//*******************
+//*** SD SPI Mode ***
+#define SD_MISO   16
+#define SD_MOSI   17
+#define SD_SCK    18
+#define SD_CS     13
 
 // bind LittleFS to our transport+FS helper
 transportAccess_t transporter(&LittleFS);
@@ -26,31 +33,40 @@ void setup() {
   Serial.println("\n--- TransportDemo (LittleFS → SD) ---");
 
   // 1) Mount LittleFS
+  transporter.changeFS(&LittleFS);
   if (!LittleFS.begin(true)) {
     Serial.println("❌ LittleFS mount failed");
     return;
   }
   Serial.println("✅ LittleFS mounted");
+  transporter.format();
+
+  SD_SPI = new SPIClass(VSPI);
+  SD_SPI->begin(SD_SCK, SD_MISO, SD_MOSI, -1);
 
   // 2) Mount SD
-  if (!SD.begin(SD_CS)) {
+  transporter.changeFS(&SD);
+  if (!SD.begin(SD_CS, *SD_SPI, 8000000U)) {
     Serial.println("❌ SD init failed");
     return;
   }
   Serial.println("✅ SD mounted");
+  transporter.format();
 
   // 3) Create a test file on LittleFS
+  transporter.changeFS(&LittleFS);
   const char* filename = "demo.txt";   // cargo name
   transporter.write("/demo.txt",
-    "TransportDemo v3\n"
-    "  Created on LittleFS\n"
-    "  Will copy to SD\n"
-  );
+                    "TransportDemo v3\n"
+                    "  Created on LittleFS\n"
+                    "  Will copy to SD\n"
+                   );
   Serial.println("→ File created in LittleFS: /demo.txt");
 
   // 4) Create destination folder on SD
-  if (!SD.exists("/copied")) {
-    SD.mkdir("/copied");
+  transporter.changeFS(&SD);
+  if (!transporter.exists("/copied")) {
+    transporter.createDir("/copied");
     Serial.println("→ Created SD folder: /copied");
   }
 
@@ -67,12 +83,13 @@ void setup() {
   }
 
   // 7) Verify on SD
+  transporter.changeFS(&SD);
   const char* target = "/copied/demo.txt";
-  if (SD.exists(target)) {
+  if (transporter.exists(target)) {
     Serial.printf("✅ Verified: %s exists on SD\n", target);
-    File f = SD.open(target);
-    size_t n = transporter.size(f);
-    f.close();
+    File file = transporter.open(target);
+    size_t n = transporter.size(file);
+    file.close();
     Serial.printf("Size on SD: %u bytes\n", n);
   }
 
@@ -81,4 +98,5 @@ void setup() {
 
 void loop() {
   // nothing here
+  delay(1000);
 }
