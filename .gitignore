@@ -1,32 +1,29 @@
-# Prerequisites
-*.d
+# PlatformIO build files
+.pio/
+.pioenvs/
+.piolibdeps/
+.pio/libdeps/
+.pio/build/
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+# IDE-specific files
+.vscode/
+.idea/
 
-# Precompiled Headers
-*.gch
-*.pch
+# OS and editor junk
+.DS_Store
+Thumbs.db
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# Compiled files
+*.elf
+*.bin
+*.hex
 
-# Fortran module files
-*.mod
-*.smod
+# Arduino-related
+*.pyc
+*.swp
+*.bak
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
-
-# Executables
-*.exe
-*.out
-*.app
+# Logs and backups
+*.log
+*.tmp
+*.bak
