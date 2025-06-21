@@ -1,16 +1,23 @@
-####################################
-# Syntax Coloring Map for initMemory
-####################################
+#################################################
+# Arduino IDE Keyword File for initMemory v2.0.0
+#################################################
 
-initMemory  KEYWORD1
+memoryAccess_t        KEYWORD1
 
-memory_t    KEYWORD1
-init        KEYWORD2
-listDir     KEYWORD2
-createDir   KEYWORD2
-removeDir   KEYWORD2
-read        KEYWORD2
-write       KEYWORD2
-append      KEYWORD2
-rename      KEYWORD2
-remove      KEYWORD2
+type                  KEYWORD2
+testIO                KEYWORD2
+listDir               KEYWORD2
+createDir             KEYWORD2
+removeDir             KEYWORD2
+read                  KEYWORD2
+write                 KEYWORD2
+append                KEYWORD2
+rename                KEYWORD2
+remove                KEYWORD2
+
+Debug_Serial_Memory    LITERAL1
+
+CARD_NONE              LITERAL1
+CARD_MMC               LITERAL1
+CARD_SD                LITERAL1
+CARD_SDHC              LITERAL1
