@@ -14,13 +14,19 @@
 #include <Arduino.h>
 #include <SPI.h>
 #include <SD.h>
-#include "initMemory.h"
+#include <initMemory.h>
 
 // enable verbose serial debug
 #define Debug_Serial_Memory
 
-// adjust to your board’s CS pin
-static const int SD_CS = 5;
+SPIClass *SD_SPI = NULL;
+
+//*******************
+//*** SD SPI Mode ***
+#define SD_MISO   16
+#define SD_MOSI   17
+#define SD_SCK    18
+#define SD_CS     13
 
 // bind our class to the SD interface
 memoryAccess_t storage(&SD);
@@ -30,8 +36,11 @@ void setup() {
   while (!Serial) delay(10);
   Serial.println("\n--- SD Bench & Data Logger ---");
 
+  SD_SPI = new SPIClass(VSPI);
+  SD_SPI->begin(SD_SCK, SD_MISO, SD_MOSI, -1);
+
   // 1) init SD
-  if (!SD.begin(SD_CS)) {
+  if (!SD.begin(SD_CS, *SD_SPI, 8000000U)) {
     Serial.println("❌ SD card init failed");
     return;
   }
@@ -71,4 +80,5 @@ void setup() {
 
 void loop() {
   // all work done in setup()
+  delay(1000);
 }
