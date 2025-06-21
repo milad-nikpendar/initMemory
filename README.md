@@ -1,4 +1,3 @@
-```markdown
 # initMemory  v1.0.0
 
 A lightweight and simple memory management library for ESP32-based projects, built on top of the Arduino FS interface.
