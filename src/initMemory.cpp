@@ -232,7 +232,6 @@ String memoryAccess_t::readLines(File &file, int count_lines, bool &is_end)
     while (file.available() && lineCount < count_lines)
     {
         dataStr += file.readStringUntil('\n');
-        dataStr += String(file.read());
         lineCount++;
     }
     is_end = (!file.available()) ? true : false; // Check if the end of the file is reached
