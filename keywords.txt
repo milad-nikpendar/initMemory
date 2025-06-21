@@ -1,0 +1,16 @@
+####################################
+# Syntax Coloring Map for initMemory
+####################################
+
+initMemory  KEYWORD1
+
+memory_t    KEYWORD1
+init        KEYWORD2
+listDir     KEYWORD2
+createDir   KEYWORD2
+removeDir   KEYWORD2
+read        KEYWORD2
+write       KEYWORD2
+append      KEYWORD2
+rename      KEYWORD2
+remove      KEYWORD2
