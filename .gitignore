@@ -5,25 +5,40 @@
 .pio/libdeps/
 .pio/build/
 
-# IDE-specific files
+# Arduino IDE / Arduino CLI build folders
+.build/
+lib/.cache/
+
+# VSCode settings
 .vscode/
+
+# JetBrains IDE settings
 .idea/
 
-# OS and editor junk
+# MacOS Finder
 .DS_Store
+
+# Windows thumbnail cache
 Thumbs.db
 
-# Compiled files
+# Linux temporary files
+*~
+
+# Compiled binaries & objects
 *.elf
 *.bin
 *.hex
+*.o
+*.a
 
-# Arduino-related
+# Arduino-related temp files
 *.pyc
 *.swp
-*.bak
-
-# Logs and backups
-*.log
 *.tmp
 *.bak
+
+# Logs
+*.log
+
+# Library metadata
+library.json
