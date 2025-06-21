@@ -224,7 +224,7 @@ String memoryAccess_t::read(const char *path, fs::FS *memory)
 }
 
 // Function to read lines from the file
-String memoryAccess_t::readLines(File &file, int count_lines, bool is_end)
+String memoryAccess_t::readLines(File &file, int count_lines, bool &is_end)
 {
     String dataStr = "";
     int lineCount = 0;
