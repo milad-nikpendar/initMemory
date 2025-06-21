@@ -53,7 +53,7 @@ public:
   String read(const char *path) { return read(path, getFS()); } // Overloaded function to read a file
 
   // Function to read lines from the file
-  String readLines(File &file, int count_lines, bool is_end);
+  String readLines(File &file, int count_lines, bool &is_end);
 
   // Function to write a message to the file
   bool write(const char *path, const char *message, fs::FS *memory);
