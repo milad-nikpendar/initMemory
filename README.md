@@ -7,21 +7,6 @@ Version 3.0.0 brings dynamic backend switching and unified file-and-folder manag
 
 ---
 
-## Table of Contents
-
-1. [Features](#features)  
-2. [Installation](#installation)  
-3. [Quickstart](#quickstart)  
-4. [API Overview](#api-overview)  
-   - [memoryAccess_t (Core FS)](#memoryaccess_t-core-fs)  
-   - [transportAccess_t (File Transfer)](#transportaccess_t-file-transfer)  
-5. [Examples](#examples)  
-6. [Migration Guide](#migration-guide)  
-7. [Dependencies](#dependencies)  
-8. [License](#license)
-
----
-
 ## Features
 
 ### ✨ Core FS (`memoryAccess_t`)
@@ -76,51 +61,6 @@ lib_deps =
    #include <initMemory.h>
    #include <initTransport.h>
    ```
-
----
-
-## Quickstart
-
-```cpp
-#include <Arduino.h>
-#include <SPIFFS.h>
-#define Debug_Serial_Memory
-#include "initMemory.h"
-#include "initTransport.h"
-
-// 1. Bind to SPIFFS
-memoryAccess_t fs(&SPIFFS);
-
-// 2. Mount & format if needed
-void setup() {
-  Serial.begin(115200);
-  while (!Serial) delay(10);
-  if (!SPIFFS.begin(true)) {
-    Serial.println("❌ SPIFFS mount failed");
-    return;
-  }
-  Serial.println("✅ SPIFFS mounted");
-
-  // 3. Basic file ops
-  fs.createDir("/data");
-  fs.write("/data/hello.txt", "Hello v3!");
-  Serial.println(fs.read("/data/hello.txt"));
-
-  // 4. Benchmark
-  fs.testIO("/data/bench.bin");
-
-  // 5. File transfer: copy /data/hello.txt → /copy/hello.txt on SD
-  SD.begin(5);
-  transportAccess_t tx(&SPIFFS);
-  tx.origin_setup(&SPIFFS, "/data/hello.txt", "hello.txt", false);
-  tx.goal_setup(&SD, "/copy/hello.txt");
-  tx.copyFile();
-}
-
-void loop() {
-  // ...
-}
-```
 
 ---
 
