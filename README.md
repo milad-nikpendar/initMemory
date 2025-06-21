@@ -122,7 +122,7 @@ Find them under the `/examples` folder, each in its own subdirectory.
 2. **FS binding**:  
    - v2: `memoryAccess_t mem(&SPIFFS);`  
    - v3: same, plus `mem.changeFS(&SD);` to swap FS.  
-3. **New methods**: replace custom hacks with `formatDir()`, `size()`, `format()`, and `set_refresh_ui()`.  
+3. **New methods**: `formatDir()`, `size()`, `format()`, and `set_refresh_ui()`.  
 4. **Transport**: move file operations into `transportAccess_t`—no more manual copy loops.
 
 ---
