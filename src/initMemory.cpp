@@ -1,23 +1,35 @@
+// initMemory.cpp
 #include "initMemory.h"
 
-// Uncomment to enable serial debug output
-// #define MemorydebugSerial
+// #define Debug_Serial_Memory
 
-memory_t::memory_t()
-  : typeMemory(nullptr)
+memoryAccess_t::memoryAccess_t(fs::FS *initMemory)
+  : typeMemory(initMemory)
 {}
 
-void memory_t::init(fs::FS *fs) {
-  typeMemory = fs;
+bool memoryAccess_t::type(uint8_t cardType) {
+  if (cardType == CARD_NONE) {
+    Serial.println("No SD card attached");
+    return false;
+  }
+
+  Serial.print("SD Card Type: ");
+  switch (cardType) {
+    case CARD_MMC:  Serial.println("MMC");  break;
+    case CARD_SD:   Serial.println("SDSC"); break;
+    case CARD_SDHC: Serial.println("SDHC"); break;
+    default:        Serial.println("UNKNOWN"); break;
+  }
+  return true;
 }
 
-bool memory_t::listDir(const String &dirname, uint8_t levels) {
-#ifdef MemorydebugSerial
-  Serial.printf("Listing directory: %s\n", dirname.c_str());
+bool memoryAccess_t::listDir(const char *dirname, uint8_t levels) {
+#ifdef Debug_Serial_Memory
+  Serial.printf("Listing directory: %s\n", dirname);
 #endif
-  File root = typeMemory->open(dirname.c_str());
+  File root = typeMemory->open(dirname);
   if (!root || !root.isDirectory()) {
-#ifdef MemorydebugSerial
+#ifdef Debug_Serial_Memory
     Serial.println(!root ? "Failed to open directory" : "Not a directory");
 #endif
     return false;
@@ -26,12 +38,12 @@ bool memory_t::listDir(const String &dirname, uint8_t levels) {
   File file = root.openNextFile();
   while (file) {
     if (file.isDirectory()) {
-#ifdef MemorydebugSerial
+#ifdef Debug_Serial_Memory
       Serial.print("  DIR : "); Serial.println(file.name());
 #endif
       if (levels) listDir(file.name(), levels - 1);
     } else {
-#ifdef MemorydebugSerial
+#ifdef Debug_Serial_Memory
       Serial.print("FILE: "); Serial.print(file.name());
       Serial.print(" \tSIZE: "); Serial.println(file.size());
 #endif
@@ -41,111 +53,142 @@ bool memory_t::listDir(const String &dirname, uint8_t levels) {
   return true;
 }
 
-bool memory_t::createDir(const String &path) {
-#ifdef MemorydebugSerial
-  Serial.printf("Creating Dir: %s\n", path.c_str());
+bool memoryAccess_t::createDir(const char *path) {
+#ifdef Debug_Serial_Memory
+  Serial.printf("Creating Dir: %s\n", path);
 #endif
-  bool ok = typeMemory->mkdir(path.c_str());
-#ifdef MemorydebugSerial
+  bool ok = typeMemory->mkdir(path);
+#ifdef Debug_Serial_Memory
   Serial.println(ok ? "Dir created" : "mkdir failed");
 #endif
   return ok;
 }
 
-bool memory_t::removeDir(const String &path) {
-#ifdef MemorydebugSerial
-  Serial.printf("Removing Dir: %s\n", path.c_str());
+bool memoryAccess_t::removeDir(const char *path) {
+#ifdef Debug_Serial_Memory
+  Serial.printf("Removing Dir: %s\n", path);
 #endif
-  bool ok = typeMemory->rmdir(path.c_str());
-#ifdef MemorydebugSerial
+  bool ok = typeMemory->rmdir(path);
+#ifdef Debug_Serial_Memory
   Serial.println(ok ? "Dir removed" : "rmdir failed");
 #endif
   return ok;
 }
 
-String memory_t::read(const String &path) {
-  String dataStr;
-#ifdef MemorydebugSerial
-  Serial.printf("Reading file: %s\n", path.c_str());
+String memoryAccess_t::read(const char *path) {
+#ifdef Debug_Serial_Memory
+  Serial.printf("Reading file: %s\n", path);
 #endif
-
-  File file = typeMemory->open(path.c_str());
+  File file = typeMemory->open(path);
   if (!file) {
-#ifdef MemorydebugSerial
+#ifdef Debug_Serial_Memory
     Serial.println("Failed to open file for reading");
 #endif
-    return String("Failed to open file");
+    return "Failed to open file";
   }
 
+  String data;
   while (file.available()) {
     char c = file.read();
-    dataStr += c;
-#ifdef MemorydebugSerial
+    data += c;
+#ifdef Debug_Serial_Memory
     Serial.write(c);
 #endif
   }
   file.close();
-  return dataStr;
+  return data;
 }
 
-bool memory_t::write(const String &path, const String &message) {
-#ifdef MemorydebugSerial
-  Serial.printf("Writing file: %s\n", path.c_str());
+bool memoryAccess_t::write(const char *path, const char *message) {
+#ifdef Debug_Serial_Memory
+  Serial.printf("Writing file: %s\n", path);
 #endif
-
-  File file = typeMemory->open(path.c_str(), FILE_WRITE);
+  File file = typeMemory->open(path, FILE_WRITE);
   if (!file) {
-#ifdef MemorydebugSerial
+#ifdef Debug_Serial_Memory
     Serial.println("Failed to open file for writing");
 #endif
     return false;
   }
-  bool ok = file.print(message.c_str());
-#ifdef MemorydebugSerial
+  bool ok = file.print(message);
+#ifdef Debug_Serial_Memory
   Serial.println(ok ? "File written" : "Write failed");
 #endif
   file.close();
   return ok;
 }
 
-bool memory_t::append(const String &path, const String &message) {
-#ifdef MemorydebugSerial
-  Serial.printf("Appending to file: %s\n", path.c_str());
+bool memoryAccess_t::append(const char *path, const char *message) {
+#ifdef Debug_Serial_Memory
+  Serial.printf("Appending to file: %s\n", path);
 #endif
-
-  File file = typeMemory->open(path.c_str(), FILE_APPEND);
+  File file = typeMemory->open(path, FILE_APPEND);
   if (!file) {
-#ifdef MemorydebugSerial
+#ifdef Debug_Serial_Memory
     Serial.println("Failed to open file for appending");
 #endif
     return false;
   }
-  bool ok = file.print(message.c_str());
-#ifdef MemorydebugSerial
+  bool ok = file.print(message);
+#ifdef Debug_Serial_Memory
   Serial.println(ok ? "Message appended" : "Append failed");
 #endif
   file.close();
   return ok;
 }
 
-bool memory_t::rename(const String &path1, const String &path2) {
-#ifdef MemorydebugSerial
-  Serial.printf("Renaming file %s to %s\n", path1.c_str(), path2.c_str());
+bool memoryAccess_t::rename(const char *path1, const char *path2) {
+#ifdef Debug_Serial_Memory
+  Serial.printf("Renaming file %s to %s\n", path1, path2);
 #endif
-  bool ok = typeMemory->rename(path1.c_str(), path2.c_str());
-#ifdef MemorydebugSerial
+  bool ok = typeMemory->rename(path1, path2);
+#ifdef Debug_Serial_Memory
   Serial.println(ok ? "File renamed" : "Rename failed");
 #endif
   return ok;
 }
 
-bool memory_t::remove(const String &path) {
-#ifdef MemorydebugSerial
-  Serial.printf("Deleting file: %s\n", path.c_str());
+bool memoryAccess_t::remove(const char *path) {
+#ifdef Debug_Serial_Memory
+  Serial.printf("Deleting file: %s\n", path);
 #endif
-  bool ok = typeMemory->remove(path.c_str());
-#ifdef MemorydebugSerial
+  bool ok = typeMemory->remove(path);
+#ifdef Debug_Serial_Memory
   Serial.println(ok ? "File deleted" : "Delete failed");
 #endif
   return ok;
+}
+
+void memoryAccess_t::testIO(const char *path) {
+  static uint8_t buf[512];
+  Serial.print("- writing");
+  uint32_t start = millis();
+  File file = typeMemory->open(path, FILE_WRITE);
+  for (size_t i = 0; i < 2048; i++) {
+    if ((i & 0x1F) == 0x1F) Serial.print(".");
+    file.write(buf, 512);
+  }
+  file.close();
+  uint32_t writeTime = millis() - start;
+  Serial.printf("\n- %u bytes written in %u ms\n", 2048UL*512, writeTime);
+  Serial.printf("  write speed: %u B/ms\n", (2048UL*512)/writeTime);
+
+  Serial.print("- reading");
+  start = millis();
+  file = typeMemory->open(path);
+  if (file && !file.isDirectory()) {
+    size_t remaining = file.size(), total = remaining;
+    while (remaining) {
+      size_t toRead = remaining > 512 ? 512 : remaining;
+      file.read(buf, toRead);
+      if ((total-remaining & 0x1F) == 0x1F) Serial.print(".");
+      remaining -= toRead;
+    }
+    file.close();
+    uint32_t readTime = millis() - start;
+    Serial.printf("\n- %u bytes read in %u ms\n", total, readTime);
+    Serial.printf("  read speed: %u B/ms\n", total/readTime);
+  } else {
+    Serial.println("\n- failed to open file for reading");
+  }
 }
