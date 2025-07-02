@@ -1,0 +1,34 @@
+name: Arduino Library CI
+
+on: [pull_request, push, repository_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+
+    - uses: actions/checkout@v3
+
+    - uses: actions/checkout@v3
+      with:
+        repository: adafruit/ci-arduino
+        path: ci
+
+    - name: Install dependencies
+      run: bash ci/actions_install.sh
+
+    - name: Build for supported platforms
+      run: python3 ci/build_platform.py main_platforms rp2040_platforms
+
+    - name: Check code formatting (clang-format)
+      run: python3 ci/run-clang-format.py -e "ci/*" -e "bin/*" -r .
+
+    - name: Generate and deploy Doxygen docs
+      env:
+        GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
+        PRETTYNAME: "initMemory"
+      run: bash ci/doxy_gen_and_deploy.sh
