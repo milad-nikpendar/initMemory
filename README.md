@@ -1,4 +1,8 @@
-# initMemory v3.0.0
+# initMemory v3.0.0 
+
+![Build Status](https://github.com/milad-nikpendar/initMemory/actions/workflows/ci.yml/badge.svg)
+[![Arduino Library Manager](https://img.shields.io/badge/Arduino-Library_Manager-00979D.svg?logo=arduino&logoColor=white)](https://docs.arduino.cc/libraries/initmemory/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 Version 3.0.0 brings dynamic backend switching and unified file-and-folder management with streaming UI feedback, plus a companion transport layer that handles cross-filesystem copy/move and conflict resolution seamlessly.
 
