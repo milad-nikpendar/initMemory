@@ -8,9 +8,6 @@
 
 Version 3.0.0 brings dynamic backend switching and unified file-and-folder management with streaming UI feedback, plus a companion transport layer that handles cross-filesystem copy/move and conflict resolution seamlessly.
 
-> **Version:** 3.0.0  
-> **Author:** Milad Nikpendar
-
 ---
 
 ## Features
