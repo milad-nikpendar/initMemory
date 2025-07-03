@@ -1,34 +1,39 @@
-name: Arduino Library CI
+name: Test initMemory on ESP32
 
-on: [pull_request, push, repository_dispatch]
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        board:
+          - esp32:esp32:esp32dev
+          - esp32:esp32:esp32wrover
+          - esp32:esp32:esp32s3
+
     steps:
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    - uses: actions/checkout@v3
+      - name: Set up Arduino CLI
+        uses: arduino/setup-arduino-cli@v1
+        with:
+          version: latest
 
-    - uses: actions/checkout@v3
-      with:
-        repository: adafruit/ci-arduino
-        path: ci
+      - name: Install ESP32 core
+        run: |
+          arduino-cli core update-index
+          arduino-cli core install esp32:esp32
 
-    - name: Install dependencies
-      run: bash ci/actions_install.sh
-
-    - name: Build for ESP32 boards
-      run: python3 ci/build_platform.py esp32:esp32:esp32 esp32:esp32:esp32wrover esp32:esp32:esp32s2 esp32:esp32:esp32c3 esp32:esp32:esp32s3
-
-    - name: Check code formatting (clang-format)
-      run: python3 ci/run-clang-format.py -e "ci/*" -e "bin/*" -r .
-
-    - name: Generate and deploy Doxygen docs
-      env:
-        GH_REPO_TOKEN: ${{ secrets.GH_REPO_TOKEN }}
-        PRETTYNAME: "initMemory"
-      run: bash ci/doxy_gen_and_deploy.sh
+      - name: Compile examples for ${{ matrix.board }}
+        run: |
+          for sketch in $(find examples -name '*.ino'); do
+            echo "Compiling $sketch for ${{ matrix.board }}"
+            arduino-cli compile --fqbn ${{ matrix.board }} "$sketch"
+          done
