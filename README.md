@@ -1,6 +1,5 @@
 # initMemory v3.0.0 
 
-![Build Status](https://github.com/milad-nikpendar/initMemory/actions/workflows/ci.yml/badge.svg)
 [![Arduino Library Manager](https://img.shields.io/badge/Arduino-Library_Manager-00979D.svg?logo=arduino&logoColor=white)](https://docs.arduino.cc/libraries/initmemory/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![GitHub release](https://img.shields.io/github/v/release/milad-nikpendar/initMemory)](https://github.com/milad-nikpendar/initMemory/releases)
