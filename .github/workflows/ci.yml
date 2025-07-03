@@ -1,9 +1,0 @@
-name: Arduino Library CI
-on: [pull_request, push]
-
-jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Run Build CI workflow
-      uses: milad-nikpendar/workflows-initmemory-libs/build@master
