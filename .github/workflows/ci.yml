@@ -1,4 +1,4 @@
-name: Test initMemory on ESP32
+name: Arduino Library CI
 
 on:
   push:
@@ -12,7 +12,7 @@ jobs:
 
     strategy:
       matrix:
-        board:
+        fqbn:
           - esp32:esp32:esp32dev
           - esp32:esp32:esp32wrover
           - esp32:esp32:esp32s3
@@ -31,9 +31,7 @@ jobs:
           arduino-cli core update-index
           arduino-cli core install esp32:esp32
 
-      - name: Compile examples for ${{ matrix.board }}
-        run: |
-          for sketch in $(find examples -name '*.ino'); do
-            echo "Compiling $sketch for ${{ matrix.board }}"
-            arduino-cli compile --fqbn ${{ matrix.board }} "$sketch"
-          done
+      - name: Run Arduino Library CI
+        uses: arduino/arduino-ci-action@v1
+        with:
+          fqbn: ${{ matrix.fqbn }}
