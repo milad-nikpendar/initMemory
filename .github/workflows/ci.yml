@@ -1,37 +1,9 @@
 name: Arduino Library CI
-
-on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+on: [pull_request, push]
 
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        fqbn:
-          - esp32:esp32:esp32dev
-          - esp32:esp32:esp32wrover
-          - esp32:esp32:esp32s3
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Arduino CLI
-        uses: arduino/setup-arduino-cli@v1
-        with:
-          version: latest
-
-      - name: Install ESP32 core
-        run: |
-          arduino-cli core update-index
-          arduino-cli core install esp32:esp32
-
-      - name: Run Arduino Library CI
-        uses: arduino/arduino-ci-action@v1
-        with:
-          fqbn: ${{ matrix.fqbn }}
+    - name: Run Build CI workflow
+      uses: milad-nikpendar/workflows-initmemory-libs/build@master
